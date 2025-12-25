@@ -1,0 +1,15 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Java build artifacts
+*.class
+*.jar
+
+# Logs
+*.log
+
+# Local secrets
+*.env

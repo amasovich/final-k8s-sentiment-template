@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sentiment-app-monitor
+  labels:
+    app: sentiment-app
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: sentiment-app
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
