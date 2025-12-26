@@ -122,8 +122,7 @@ sudo install minikube-linux-amd64 /usr/local/bin/minikube
 minikube version
 ```
 
-**СКРИНШОТ:** `minikube version`  
-`![](screenshots/03_minikube/03.1_minikube_version.png)`
+![minikube version](screenshots/03_minikube/03.1_minikube_version.png)
 
 ### 3.1.2. Установка kubectl
 
@@ -134,29 +133,27 @@ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl version --client
 ```
 
-**СКРИНШОТ:** `kubectl version --client`  
-`![](screenshots/03_minikube/03.2_kubectl_version_client.png)`
+![kubectl version](screenshots/03_minikube/03.2_kubectl_version_client.png)
 
 ## 3.2. Создание кластера Minikube
 
 Запуск кластера:
 
 ```bash
-minikube start --cpus=4 --memory=8192mb --nodes=2
+minikube start --cpus=4 --memory=6144mb --nodes=2
 ```
 
-**СКРИНШОТ:** запуск `minikube start ...`  
-`![](screenshots/03_minikube/03.3_minikube_start.png)`
+![minikube start](screenshots/03_minikube/03.3_minikube_start.png)
 
-Проверка статуса:
+Проверка статуса, нодов и подов:
 
 ```bash
 minikube status
-kubectl get nodes
+kubectl get nodes -o wide
+kubectl get pods -A
 ```
 
-**СКРИНШОТ:** `minikube status`, `kubectl get nodes`  
-`![](screenshots/03_minikube/03.4_minikube_status_nodes.png)`
+![minikube status, kubectl get nodes](screenshots/03_minikube/03.4_minikube_status_nodes_pods.png)
 
 ## 3.3. Включение необходимых аддонов
 
@@ -169,8 +166,7 @@ minikube addons enable metrics-server
 minikube addons list
 ```
 
-**СКРИНШОТ:** `minikube addons list`  
-`![](screenshots/03_minikube/03.5_minikube_addons.png)`
+![minikube addons list](screenshots/03_minikube/03.5_minikube_addons.png)
 
 Для доступа к сервисам типа `LoadBalancer` использую:
 
@@ -180,8 +176,7 @@ minikube tunnel
 
 > `minikube tunnel` нужно держать запущенным в отдельном терминале.
 
-**СКРИНШОТ:** запущенный `minikube tunnel`  
-`![](screenshots/03_minikube/03.6_minikube_tunnel.png)`
+![minikube tunnel](screenshots/03_minikube/03.6_minikube_tunnel.png)
 
 ---
 
