@@ -27,6 +27,8 @@
 │   ├── hpa.yaml
 │   └── service-monitor.yaml
 └── screenshots/
+    ├── 01_vm/
+    ├── 02_remote_ssh/
     ├── 03_minikube/
     ├── 04_docker/
     ├── 05_k8s/
@@ -74,8 +76,8 @@
 
 ## 1.3. Среда выполнения
 
-- Ubuntu 22.04.5 LTS (виртуальная машина в VMware Workstation)
-- На хосте Windows 11: VS Code + расширения Remote Development / Remote‑SSH  
+- Ubuntu 22.04.5 LTS (виртуальная машина в VMware Workstation). См. в папке `screenshots/01_vm`
+- На хосте Windows 11: VS Code + расширения Remote Development / Remote‑SSH. См. в папке `screenshots/02_remote_ssh`
 - Минимальные ресурсы VM (рекомендация): 4 vCPU, 8+ GB RAM, 20+ GB диск
 
 ---
