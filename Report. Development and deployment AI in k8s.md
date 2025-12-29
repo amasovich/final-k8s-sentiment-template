@@ -305,6 +305,8 @@ cd ~/final-k8s-sentiment-template/app
 kubectl run load-generator --image=busybox --restart=Never -- /bin/sh -c 'while true; do wget -q -O- http://sentiment-service/api/sentiment?text=load; done'
 ```
 
+![Создаю нагрузку](screenshots/05_k8s/05.4_hpa_scaling.png)
+
 Слежение за масштабированием:
 
 ```bash
@@ -312,7 +314,6 @@ kubectl get hpa -w
 kubectl get pods -w
 ```
 
-![Создаю нагрузку](screenshots/05_k8s/05.4_hpa_scaling.png)
 ![рост нагрузки / изменение реплик](screenshots/05_k8s/05.5_hpa_scaling.png)
 
 ---
