@@ -4,18 +4,15 @@
 **Проект (экзамен):** Разработка и развёртывание ИИ‑приложения в Kubernetes  
 **Студент:** Березняк В.Н., гр. М24-535  
 **Среда выполнения:** Ubuntu 22.04.5 LTS (VMware Workstation) + VS Code (Windows 11, Remote‑SSH)  
-**Дата:** _[вставить дату сдачи]_  
-
-> Этот файл — **методичка** для повторения шагов.  
-> В местах с пометкой **СКРИНШОТ** вставляю **свои** скриншоты (файлы держу в папке `screenshots/`).
+**Дата:** 29.12.2025  
 
 ---
 
-## Структура репозитория (рекомендуемая)
+## Структура репозитория
 
 ```
 .
-├── Итоговый проект. Разработка и развертывание ИИ-приложения в Kubernetes.md
+├── Report. Development and deployment AI in k8s.md
 ├── README.md
 ├── app/
 │   ├── SentimentApplication.java
@@ -193,12 +190,12 @@ minikube tunnel
 - `GET /metrics` → метрика `sentiment_requests_total` (Prometheus text format)
 
 Код приложения находится в файле:  
-- `app/SentimentApplication.java`  (см. Приложение A)
+- `app/SentimentApplication.java`
 
 ## 4.2. Dockerfile и multi‑stage build
 
 Dockerfile с multi‑stage сборкой и `jlink` для минимального JRE:  
-- `app/Dockerfile` (см. Приложение B)
+- `app/Dockerfile`
 
 ## 4.3. Сборка и локальное тестирование образа
 
@@ -329,8 +326,7 @@ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 helm version
 ```
 
-**СКРИНШОТ:** `helm version`  
-`![](screenshots/06_monitoring/06.1_helm_version.png)`
+![helm version](screenshots/06_monitoring/06.1_helm_version.png)
 
 ### 6.1.2. Установка стека мониторинга
 
@@ -343,15 +339,17 @@ kubectl create namespace monitoring
 helm install prometheus prometheus-community/kube-prometheus-stack   --namespace monitoring   --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false   --set grafana.adminPassword=admin123   --wait
 ```
 
+![Установка мониторинга](screenshots/06_monitoring/06.2_setup_monitoring_pods_svc.png)
+
 Проверка:
 
 ```bash
+helm list -n monitoring
 kubectl get pods -n monitoring
 kubectl get svc -n monitoring
 ```
 
-**СКРИНШОТ:** pods/svc в namespace monitoring  
-`![](screenshots/06_monitoring/06.2_monitoring_pods_svc.png)`
+![pods/svc в namespace monitoring ](screenshots/06_monitoring/06.3_monitoring_pods_svc.png)
 
 ## 6.2. Подключение приложения к Prometheus (ServiceMonitor)
 
@@ -362,8 +360,7 @@ kubectl apply -f k8s/service-monitor.yaml
 kubectl get servicemonitor -A
 ```
 
-**СКРИНШОТ:** ServiceMonitor в кластере  
-`![](screenshots/06_monitoring/06.3_servicemonitor.png)`
+![ServiceMonitor в кластере](screenshots/06_monitoring/06.4_servicemonitor.png)
 
 ## 6.3. Доступ к Prometheus и Grafana
 
@@ -372,11 +369,20 @@ kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 909
 kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80 &
 ```
 
+![Prometheus и Grafana](screenshots/06_monitoring/06.5_grafana_prometheus.png)
+
+Так как port-forward выполняется внутри Ubuntu-ВМ, для открытия интерфейсов с хостовой Windows нужен SSH-туннель:
+
+```bash
+ssh -L 3000:127.0.0.1:3000 -L 9090:127.0.0.1:9090 bereza@192.168.112.128
+```
+
+![SSH_tunel](screenshots/06_monitoring/06.6_SSH_tunel.png)
+
 - Prometheus: http://localhost:9090
 - Grafana: http://localhost:3000 (логин `admin`, пароль `admin123`)
 
-**СКРИНШОТ:** открытая Grafana / Prometheus  
-`![](screenshots/06_monitoring/06.4_grafana_prometheus_ui.png)`
+![открытая Grafana / Prometheus](screenshots/06_monitoring/06.7_grafana_prometheus_ui.png)
 
 ## 6.4. Настройка Grafana и дашборд
 
@@ -387,19 +393,19 @@ kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80 &
 3. URL: `http://prometheus-kube-prometheus-prometheus:9090`
 4. `Save & Test`
 
-**СКРИНШОТ:** успешный `Save & Test`  
-`![](screenshots/06_monitoring/06.5_grafana_datasource.png)`
+![](screenshots/06_monitoring/06.8_grafana_datasource.png)
+![](screenshots/06_monitoring/06.9_grafana_datasource_save_test.png)
+
 
 ### 6.4.2. Дашборд
 
-Панели (минимум):
+Панели:
 
-- `sentiment_requests_total` (по времени)
-- CPU/Memory по pod’ам
-- статус pod’ов
+- график `sentiment_requests_total` (по времени)
+- графики `container_cpu_usage_seconds_total, container_memory_usage_bytes` (CPU/Memory по pod’ам)
+- панель статусов pod’ов
 
-**СКРИНШОТ:** дашборд Grafana  
-`![](screenshots/06_monitoring/06.6_grafana_dashboard.png)`
+![дашборд Grafana ](screenshots/06_monitoring/06.10_grafana_dashboard.png)
 
 ---
 
@@ -430,30 +436,59 @@ kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80 &
 
 ---
 
-# 8. Заключение (заполню после выполнения)
+# 8. Заключение
 
-## 8.1. Достигнутые результаты (шаблон)
+## 8.1. Достигнутые результаты
 
-- [ ] Реализовано Java‑приложение `/api/sentiment`, `/health`, `/metrics`
-- [ ] Собран Docker‑образ <150MB
-- [ ] Развёрнуто в Minikube: Deployment (3), Service LB, Ingress, HPA
-- [ ] Установлен Prometheus+Grafana, собраны метрики, сделан дашборд
-- [ ] Подготовлен анализ arXiv (будет позже)
+- Подготовлено и запущено Java-приложение, реализующее:
+  - `GET /api/sentiment?text=...` — обработка запроса и выдача результата
+  - `GET /health` — endpoint проверки состояния сервиса
+  - `GET /metrics` — экспорт метрик в формате Prometheus
+- Выполнена контейнеризация приложения:
+  - создан Dockerfile и собран Docker-образ приложения
+  - выполнена локальная проверка запуска контейнера и работоспособности API
+- Развёрнут Kubernetes-кластер в Minikube и подготовлена базовая инфраструктура:
+  - включены необходимые компоненты кластера (Ingress, сбор метрик для autoscaling)
+  - выполнена проверка состояния кластера (`kubectl get nodes/pods`)
+- Приложение развернуто в Kubernetes:
+  - `Deployment` приложения и запуск нескольких реплик
+  - `Service` для доступа к приложению внутри кластера
+  - `Ingress` для маршрутизации входящего трафика
+  - `HPA` (Horizontal Pod Autoscaler) — подтверждена работа масштабирования по CPU под нагрузкой
+- Настроен мониторинг и наблюдаемость:
+  - установлен стек Prometheus + Grafana (kube-prometheus-stack)
+  - подключен Prometheus datasource в Grafana и проверено получение метрик
+  - создан Grafana-дашборд с панелями:
+    - **Sentiment requests / sec**
+    - **CPU usage (cores) by pod**
+    - **Memory usage by pod**
+    - **Pods readiness**
+- Анализ тенденций (arXiv, 2024–2025)
 
-## 8.2. Трудности и решения (таблица)
+## 8.2. Трудности и решения
+
+## 8.2. Трудности и решения
 
 | Трудность | Описание | Решение |
 |---|---|---|
-| _TODO_ | _TODO_ | _TODO_ |
-| _TODO_ | _TODO_ | _TODO_ |
+| Установка Docker в Ubuntu VM | На этапе установки возникали расхождения в ожидаемом/фактическом выводе команд и сомнения в корректности установки. | Установил Docker и проверил работоспособность через базовые команды (`docker version`, `docker ps`). Работу выполнял через SSH из VSCode — это не влияет на результат, если команды выполняются на целевой VM. |
+| Ограничение ресурсов VM/Minikube | Был риск, что выделенных ресурсов (память/CPU/диск) не хватит для мониторинга и приложения (типичный симптом — Pending/OOM/нестабильный старт). | Оставил текущие ресурсы, т.к. кластер и мониторинг запустились. Зафиксировал правило: при Pending/OOM — увеличивать RAM/CPU/диск VM и перезапускать Minikube. |
+| Включение необходимых аддонов Minikube | Без необходимых аддонов часть функциональности кластера не проверялась (Ingress/HPA/метрики). | Включил требуемые аддоны (в первую очередь `ingress`, `metrics-server`), после чего Ingress и HPA стали работоспособны и проверяемы. |
+| Grafana/Prometheus: проверка источника данных | Требовалось убедиться, что Grafana действительно получает данные из Prometheus. | Настроил Prometheus datasource в Grafana, выполнил `Save & Test`, проверил метрики через Explore (например, `up`). |
+| Grafana “No data” в панели CPU | Запросы по CPU не возвращали данные из-за несовпадения метрик/лейблов и неверной фильтрации. | Через Prometheus UI проверил наличие метрики и реальные labels, после чего использовал рабочий PromQL для CPU по pod’ам: `sum by (pod) (rate(container_cpu_usage_seconds_total{cpu="total", pod=~"sentiment-app-.*|load-generator"}[1m]))`. |
+| Grafana “No data” в панели Memory (первый вариант) | Простой запрос по памяти не попадал в нужные series/pod’ы. | Перешёл на `container_memory_working_set_bytes` и добавил корректные фильтры: `sum by (pod) (container_memory_working_set_bytes{namespace="default", pod=~"sentiment-app-.*|load-generator", id=~"/kubepods.*"})`. |
+| Некорректное отображение readiness (“нет time field”) | Панель readiness отображалась неверно из-за неподходящего типа данных/агрегации по времени. | Использовал метрику kube-state-metrics и time-агрегацию: `avg_over_time(kube_pod_status_ready{namespace="default", condition="true"}[1m])`, после чего статусы начали отображаться корректно. |
+| Метрики “не меняются” без нагрузки | Без генерации запросов метрика `sentiment_requests_total` почти не менялась, графики выглядели статичными. | Запустил `load-generator`, который циклически отправляет запросы к сервису — метрики стали динамичными, появилась нагрузка для наблюдения поведения HPA. |
+| Ошибка `AlreadyExists` при повторном запуске load-generator | При повторном создании pod с тем же именем Kubernetes возвращал `AlreadyExists`. | Удалял существующий pod перед повторным запуском (`kubectl delete pod load-generator`) либо запускал под другим именем. |
 
-## 8.3. Перспективы развития (шаблон)
+## 8.3. Перспективы развития
 
-- [ ] заменить rule‑based на ML/LLM;
-- [ ] добавить кэширование;
-- [ ] CI/CD (GitHub Actions / GitLab CI);
-- [ ] трейсинг (Jaeger/Tempo);
-- [ ] service mesh (Istio/Linkerd).
+- Перейти от rule-based логики к ML/LLM-подходу: обучаемая модель тональности (эмбеддинги, fine-tuning или внешнее API), а также добавление метрик качества (precision/recall/F1) и тестового датасета для регрессионной проверки.
+- Повысить производительность и устойчивость: кэширование результатов `/api/sentiment` (например, Redis) + ограничение частоты запросов (rate limiting) и базовая защита от перегрузки.
+- Автоматизировать поставку: CI/CD (GitHub Actions / GitLab CI) — сборка и проверка (tests/lint), публикация Docker-образа в registry, деплой в Kubernetes по тегам/релизам.
+- Улучшить наблюдаемость: распределённый трейсинг (Jaeger или Grafana Tempo) и сквозная корреляция логов/метрик через `traceId` (единый идентификатор трассировки).
+- Усилить сетевую безопасность и контроль трафика: внедрение service mesh (Istio или Linkerd) для mTLS (mutual TLS — взаимная аутентификация), политик доступа, ретраев/таймаутов и продвинутой телеметрии.
+- Ввести эксплуатационные практики: алёрты (Alertmanager), SLO/SLI (Service Level Objective / Service Level Indicator — целевые уровни сервиса и измеримые показатели), отдельный дашборд “Golden Signals” (latency/traffic/errors/saturation) и сценарии реагирования (runbooks).
 
 ---
 
@@ -461,20 +496,17 @@ kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80 &
 
 ## 9.1. Документация
 
-1. Minikube: https://minikube.sigs.k8s.io/docs/start/  
-2. Kubernetes Docs: https://kubernetes.io/docs/home/  
-3. Helm: https://helm.sh/docs/  
-4. kube‑prometheus‑stack: https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack  
-5. Grafana: https://grafana.com/docs/  
+1. Minikube: https://minikube.sigs.k8s.io/docs/start/
+2. Kubernetes Docs: https://kubernetes.io/docs/home/
+3. Helm: https://helm.sh/docs/
+4. kube-prometheus-stack: https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+5. Grafana: https://grafana.com/docs/
+6. Prometheus (PromQL): https://prometheus.io/docs/prometheus/latest/querying/basics/
+7. Kubernetes HPA: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+
 
 ## 9.2. Научные работы (будут добавлены позже)
 
 - _TODO: список 3–5+ статей arXiv (2024–2025)_
 
 ---
-
-# Приложения (файлы проекта)
-
-- **Приложение A:** `app/SentimentApplication.java`
-- **Приложение B:** `app/Dockerfile`
-- **Приложение C:** `k8s/*.yaml`
