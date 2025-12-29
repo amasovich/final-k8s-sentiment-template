@@ -14,6 +14,10 @@
 .
 ├── Report. Development and deployment AI in k8s.pdf
 ├── README.md
+├── docs/
+│   ├── Report_Development_and_deployment_AI_in_k8s.pdf
+│   ├── MEPHI_Orchestration_containerization_Presentation.pdf
+│   └── MEPHI_Orchestration_containerization_Presentation.pptx
 ├── app/
 │   ├── SentimentApplication.java
 │   └── Dockerfile
