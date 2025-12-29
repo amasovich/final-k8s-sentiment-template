@@ -101,7 +101,7 @@
    - сбор метрик Kubernetes и приложения через `ServiceMonitor`;
    - визуализация в Grafana.
 
-![](screenshots\07_schemes\07.1_logic_scheme.png)
+![Логическая схема](screenshots/07_schemes/07.1_logic_scheme.png)
 
 ---
 
