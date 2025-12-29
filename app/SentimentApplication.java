@@ -1,3 +1,4 @@
+import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
@@ -61,7 +62,7 @@ public class SentimentApplication {
         System.out.println("SentimentApplication started on port " + PORT);
     }
 
-    private static void sendJson(com.sun.net.httpserver.HttpExchange exchange, int status, String json) throws IOException {
+    private static void sendJson(HttpExchange exchange, int status, String json) throws IOException {
         byte[] body = json.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().set("Content-Type", "application/json; charset=utf-8");
         exchange.sendResponseHeaders(status, body.length);

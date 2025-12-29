@@ -205,13 +205,14 @@ Dockerfile с multi‑stage сборкой и `jlink` для минимальн�
 Сборка образа:
 
 ```bash
-cd app
+cd final-k8s-sentiment-template/app
 docker build -t sentiment-app:1.0 .
 docker images sentiment-app:1.0
 ```
 
-**СКРИНШОТ:** `docker images sentiment-app:1.0` (видно размер <150 MB)  
-`![](screenshots/04_docker/04.1_docker_images.png)`
+Убедимся, что размер <150 MB
+
+![docker images sentiment-app:1.0](screenshots/04_docker/04.1_docker_images.png)
 
 Локальный запуск:
 
@@ -227,27 +228,20 @@ curl "http://localhost:8080/health"
 curl "http://localhost:8080/metrics"
 ```
 
-**СКРИНШОТ:** curl‑проверка `api/health/metrics`  
-`![](screenshots/04_docker/04.2_local_curl_test.png)`
+![curl‑проверка](screenshots/04_docker/04.2_local_curl_test.png)
 
-## 4.4. Загрузка образа в Minikube
+## 4.4. Загрузка образа в Minikube (multi-node)
 
-Вариант 1 (через docker‑env Minikube):
-
-```bash
-eval "$(minikube docker-env)"
-cd app
-docker build -t sentiment-app:1.0 .
-```
-
-Вариант 2 (через `minikube image load`):
+Кластер Minikube запущен с 2 нодами, поэтому `minikube docker-env` не применяется.  
+Для доставки образа в кластер используется команда `minikube image load`.
 
 ```bash
-docker save sentiment-app:1.0 | minikube image load sentiment-app:1.0
+cd ~/final-k8s-sentiment-template/app
+minikube image load sentiment-app:1.0
+minikube image ls | grep sentiment-app
 ```
 
-**СКРИНШОТ:** загрузка образа в Minikube  
-`![](screenshots/04_docker/04.3_minikube_image_load.png)`
+![загрузка образа в Minikube](screenshots/04_docker/04.3_minikube_image_load.png)
 
 ---
 
