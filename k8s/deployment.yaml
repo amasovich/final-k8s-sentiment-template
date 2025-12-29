@@ -21,6 +21,8 @@ spec:
       serviceAccountName: sentiment-sa
       securityContext:
         runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
       containers:
         - name: sentiment-app
           image: sentiment-app:1.0

@@ -272,8 +272,7 @@ kubectl get ingress
 kubectl get hpa
 ```
 
-**СКРИНШОТ:** список ресурсов после apply  
-`![](screenshots/05_k8s/05.1_kubectl_get_all.png)`
+![список ресурсов после apply](screenshots/05_k8s/05.1_kubectl_get_all.png)
 
 ## 5.3. Тестирование доступа к приложению
 
