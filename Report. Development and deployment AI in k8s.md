@@ -163,7 +163,7 @@ kubectl get pods -A
 minikube addons enable ingress
 minikube addons enable metrics-server
 
-minikube addons list
+minikube addons list | egrep 'ingress|metrics-server'
 ```
 
 ![minikube addons list](screenshots/03_minikube/03.5_minikube_addons.png)
