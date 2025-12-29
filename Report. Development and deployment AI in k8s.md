@@ -283,40 +283,25 @@ kubectl port-forward svc/sentiment-service 8080:80
 curl "http://localhost:8080/api/sentiment?text=I+like+Kubernetes"
 ```
 
-**СКРИНШОТ:** port‑forward + curl  
-`![](screenshots/05_k8s/05.2_port_forward_test.png)`
+![port‑forward + curl](screenshots/05_k8s/05.2_port_forward_test.png)
 
 ### 5.3.2. Через Ingress
 
-1) Узнать IP Minikube:
-
-```bash
-minikube ip
-```
-
-2) Прописать host в `/etc/hosts` (на Ubuntu VM):
-
-```text
-<MINIKUBE_IP>  sentiment.local
-```
-
-3) Убедиться, что запущен `minikube tunnel` (см. п. 3.3)
-
-Проверка:
+После настройки /etc/hosts и запуска minikube tunnel:
 
 ```bash
 curl "http://sentiment.local/api/sentiment?text=hello"
 curl "http://sentiment.local/health"
 ```
 
-**СКРИНШОТ:** curl по `sentiment.local`  
-`![](screenshots/05_k8s/05.3_ingress_test.png)`
+![sentiment.local](screenshots/05_k8s/05.3_ingress_test.png)
 
 ## 5.4. Проверка работы HPA
 
 Создаю нагрузку:
 
 ```bash
+cd ~/final-k8s-sentiment-template/app
 kubectl run load-generator --image=busybox --restart=Never -- /bin/sh -c 'while true; do wget -q -O- http://sentiment-service/api/sentiment?text=load; done'
 ```
 
@@ -327,8 +312,8 @@ kubectl get hpa -w
 kubectl get pods -w
 ```
 
-**СКРИНШОТ:** рост нагрузки / изменение реплик  
-`![](screenshots/05_k8s/05.4_hpa_scaling.png)`
+![Создаю нагрузку](screenshots/05_k8s/05.4_hpa_scaling.png)
+![рост нагрузки / изменение реплик](screenshots/05_k8s/05.5_hpa_scaling.png)
 
 ---
 
